@@ -58,7 +58,7 @@ def save_document_to_text_file(document_text):
             # Write the data to the file
             file.write(document_text)
         print("document text saved to file - "+ file_path)
-        return {"status":"document file saved , Call /question_response to get output"}
+        return {"status":"document file saved , Call /build_model to get output"}
     except:
         exit(0)
 
@@ -68,6 +68,18 @@ def save_document_to_text_file(document_text):
 @app.route('/inferencing/question_response', methods=['POST'])
 def qa_model():
     start_time = datetime.datetime.now()
+
+    data = request.get_json()
+
+    # Check if both inputs are provided
+    if 'document_text' not in data:
+        return jsonify({'error': 'Document text not passed'}), 400
+    document_text=data['document_text']
+    try:
+        save_document_to_text_file(document_text)
+    except:
+        print("issue saving file")
+        exit()
     loader = TextLoader("document_text.txt")
     documents = loader.load()
     text_splitter = RecursiveCharacterTextSplitter(
@@ -83,7 +95,7 @@ def qa_model():
     print("vector store", vector_store)
 
 
-    data = request.get_json()
+
 
     if 'question' not in data:
         return jsonify({'error': 'question text not passed'}), 400
@@ -108,7 +120,7 @@ def qa_model():
     qa_prompt = PromptTemplate(template=template, input_variables=['context', 'question'])
 
     # start=timeit.default_timer()
-
+    print("running question query --loading")
     chain = RetrievalQA.from_chain_type(llm=llm,
                                         chain_type='stuff',
                                         retriever=vector_store.as_retriever(search_kwargs={'k': 2}),
