@@ -1,0 +1,84 @@
+
+LLaMA (Large Language Model Meta AI) is a large language model (LLM) released by Meta AI in February 2023. Four model sizes were trained: 7, 13, 33 and 65 billion parameters. LLaMA's developers reported that the 13B parameter model's performance on most NLP benchmarks exceeded that of the much larger GPT-3 (with 175B parameters) and that the largest model was competitive with state of the art models such as PaLM and Chinchilla.[1] Whereas the most powerful LLMs have generally been accessible only through limited APIs (if at all), Meta released LLaMA's model weights to the research community under a noncommercial license.[2] Within a week of LLaMA's release, its weights were leaked to the public on 4chan via BitTorrent.[3]
+
+Llama 2
+On July 18, 2023, in partnership with Microsoft, Meta announced Llama 2, the next generation of LLaMA. Meta trained and released Llama 2 in three model sizes: 7, 13, and 70 billion parameters.[4] The model architecture remains largely unchanged from that of Llama 1 models, but 40% more data was used to train the foundational models.[5] The accompanying preprint[5] also mentions a model with 34B parameters that might be released in the future upon satisfying safety targets.
+
+Llama 2 includes both foundational models and models fine-tuned for dialog, called Llama 2 - Chat. In further departure from Llama 1, all models are released with weights and are free for commercial use.
+
+Architecture and training
+"A conversation between the sun and pluto"
+Sun: Hey Pluto, what’s up?
+Pluto: Not much. Just hanging out here at the edge of the solar system.
+Sun: Yeah, I’ve been meaning to talk to you about that. You’re not a planet anymore.
+Pluto: What? Come on, man. That’s not fair.
+Sun: I’m sorry, but it’s true. You just don’t meet the criteria anymore.
+Pluto: This is bulls**t! I’ve been a planet for over 70 years!
+Sun: Things change, Pluto. You’ve just got to accept it.
+Pluto: F**k you, Sun! F**k you and your stupid solar system!
+– Output of 65 billion parameter LLaMA model after instruction tuning given the prompt "Write a conversation between the sun and pluto"[1]
+Architecture
+LLaMA uses the transformer architecture, the standard architecture for language modeling since 2018.
+
+There are minor architectural differences. Compared to GPT-3, LLaMA
+
+uses SwiGLU[6] activation function instead of ReLU;
+uses rotary positional embeddings[7] instead of absolute positional embedding;
+uses root-mean-squared layer-normalization[8] instead of standard layer-normalization.[9]
+increases context length from 2K (Llama 1) tokens to 4K (Llama 2) tokens between.
+Training datasets
+LLaMA's developers focused their effort on scaling the model's performance by increasing the volume of training data, rather than the number of parameters, reasoning that the dominating cost for LLMs is from doing inference on the trained model rather than the computational cost of the training process.
+
+LLaMA 1 foundational models were trained on a data set with 1.4 trillion tokens, drawn from publicly available data sources, including:[1]
+
+Webpages scraped by CommonCrawl
+Open source repositories of source code from GitHub
+Wikipedia in 20 different languages
+Public domain books from Project Gutenberg
+The LaTeX source code for scientific papers uploaded to ArXiv
+Questions and answers from Stack Exchange websites
+Llama 2 foundational models were trained on a data set with 2 trillion tokens. This data set was curated to remove Web sites that often disclose personal data of people. It also upsamples sources considered trustworthy.[5] Llama 2 - Chat was additionally fine-tuned on 27,540 prompt-response pairs created for this project, which performed better than larger but lower-quality third-party datasets. For AI alignment, reinforcement learning with human feedback (RLHF) was used with a combination of 1,418,091 Meta examples and seven smaller datasets. The average dialog depth was 3.9 in the Meta examples, 3.0 for Anthropic Helpful and Anthropic Harmless sets, and 1.0 for five other sets, including OpenAI Summarize, StackExchange, etc.
+
+Fine-tuning
+Llama 1 models are only available as foundational models with self-supervised learning and without fine-tuning. Llama 2 - chat models were derived from foundational Llama 2 models. Unlike GPT-4 which increased context length during fine-tuning, Llama 2 and Llama 2 - Chat have the same context length of 4K tokens. Supervised fine-tuning used an autoregressive loss function with token loss on user prompts zeroed out. Batch size was 64.
+
+For AI alignment, human annotators wrote prompts and then compared two model outputs (a binary protocol), giving confidence levels and separate safety labels with veto power. Two separate reward models were trained from these preferences for safety and helpfulness using Reinforcement learning from human feedback (RLHF). A major technical contribution is the departure from the exclusive use of Proximal Policy Optimization (PPO) for RLHF --- a new technique based on Rejection sampling was used, followed by PPO.
+
+Multi-turn consistency in dialogs was targeted for improvement, to make sure that "system messages" (initial instructions, such as "speak in French" and "act like Napoleon") are respected during the dialog. This was accomplished using the new "Ghost attention" technique during training, that concatenates relevant instructions to each new user message but zeros out the loss function for tokens in the prompt (earlier parts of the dialog).
+
+Release and leak
+LLaMA was announced on February 23, 2023, via a blog post and a paper describing the model's training, architecture, and performance.[1][2] The inference code used to run the model was publicly released under the open-source GPL 3 license.[10] Access to the model's weights was managed by an application process, with access to be granted "on a case-by-case basis to academic researchers; those affiliated with organizations in government, civil society, and academia; and industry research laboratories around the world".[2]
+
+On March 2, 2023,[11] a torrent containing LLaMA's weights was uploaded, with a link to the torrent shared on the 4chan imageboard and subsequently spreading through online AI communities.[3] That same day, a pull request on the main LLaMA repository was opened, requesting to add the magnet link to the official documentation.[12][13] On March 4, a pull request was opened to add links to HuggingFace repositories containing the model.[14][12] On March 6, Meta filed takedown requests to remove the HuggingFace repositories linked in the pull request, characterizing it as "unauthorized distribution" of the model. HuggingFace complied with the requests.[15] On March 20, Meta filed a DMCA takedown request for copyright infringement against a repository containing a script that downloaded LLaMA from a mirror, and GitHub complied the next day.[16] As of March 25, Facebook has not responded to the pull request containing the magnet link.[13]
+
+Reactions to the leak varied. Some speculated that the model would be used for malicious purposes, such as more sophisticated spam. Some have celebrated the model's accessibility, as well as the fact that smaller versions of the model can be run relatively cheaply, suggesting that this will promote the flourishing of additional research developments.[3] Multiple commentators, such as Simon Willison, compared LLaMA to Stable Diffusion, a text-to-image model which, unlike comparably sophisticated models which preceded it, was openly distributed, leading to a rapid proliferation of associated tools, techniques, and software.[3][17]
+
+Dataset reproduction
+On April 17, 2023, Together launched a project named RedPajama to reproduce and distribute an open source version of the LLaMA dataset.[18] The dataset has approximately 1.2 trillion tokens and is publicly available for download.[19]
+
+Applications
+The Stanford University Institute for Human-Centered Artificial Intelligence (HAI) Center for Research on Foundation Models (CRFM) released Alpaca, a training recipe based on the LLaMA 7B model that uses the "Self-Instruct" method of instruction tuning to acquire capabilities comparable to the OpenAI GPT-3 series text-davinci-003 model at a modest cost.[20][21] Multiple open source projects are continuing this work of finetuning LLaMA with Alpaca dataset.[22]
+
+References
+ Touvron, Hugo; Lavril, Thibaut; Izacard, Gautier; Martinet, Xavier; Lachaux, Marie-Anne; Lacroix, Timothée; Rozière, Baptiste; Goyal, Naman; Hambro, Eric; Azhar, Faisal; Rodriguez, Aurelien; Joulin, Armand; Grave, Edouard; Lample, Guillaume (2023). "LLaMA: Open and Efficient Foundation Language Models". arXiv:2302.13971 [cs.CL].
+ "Introducing LLaMA: A foundational, 65-billion-parameter large language model". Meta AI. 24 February 2023.
+ Vincent, James (8 March 2023). "Meta's powerful AI language model has leaked online — what happens now?". The Verge.
+ "Meta and Microsoft Introduce the Next Generation of Llama". Meta. 18 July 2023. Retrieved 21 July 2023.
+ Touvron, Hugo Touvron; Martin, Louis; et al. (18 Jul 2023). "Llama 2: Open Foundation and Fine-Tuned Chat Models". arXiv:2307.09288 [cs.CL].
+ Shazeer, Noam (2020-02-01). "GLU Variants Improve Transformer". arXiv:2104.09864 [cs.CL].
+ Su, Jianlin; Lu, Yu; Pan, Shengfeng; Murtadha, Ahmed; Wen, Bo; Liu, Yunfeng (2021-04-01). "RoFormer: Enhanced Transformer with Rotary Position Embedding". arXiv:2104.09864 [cs.CL].
+ Zhang, Biao; Sennrich, Rico (2019-10-01). "Root Mean Square Layer Normalization". arXiv:1910.07467 [cs.LG].
+ Lei Ba, Jimmy; Kiros, Jamie Ryan; Hinton, Geoffrey E. (2016-07-01). "Layer Normalization". arXiv:1607.06450 [stat.ML].
+ "llama". GitHub. Retrieved 16 March 2023.
+ "/g/ - /aicg/ - AI Chatbot General - Technology - 4chan". 5 Mar 2023.
+ VK, Anirudh (6 March 2023). "Meta's LLaMA Leaked to the Public, Thanks To 4chan". Analytics India Magazine. Retrieved 17 March 2023.
+ "Save bandwidth by using a torrent to distribute more efficiently by ChristopherKing42 · Pull Request #73 · facebookresearch/llama". GitHub. Retrieved 25 March 2023.
+ "Download weights from huggingface to help us save bandwith by Jainam213 · Pull Request #109 · facebookresearch/llama". GitHub. Retrieved 17 March 2023.
+ Cox, Joseph (7 March 2023). "Facebook's Powerful Large Language Model Leaks Online". Vice. Retrieved 17 March 2023.
+ OpSec Online LLC (21 March 2023). "github/dmca - Notice of Claimed Infringement via Email". GitHub. Retrieved 25 March 2023.
+ Willison, Simon (11 March 2023). "Large language models are having their Stable Diffusion moment". Simon Willison's Weblog.
+ "RedPajama-Data: An Open Source Recipe to Reproduce LLaMA training dataset". GitHub. Together. Retrieved 4 May 2023.
+ "RedPajama-Data-1T". Hugging Face. Together. Retrieved 4 May 2023.
+ Taori, Rohan; Gulrajani, Ishaan; Zhang, Tianyi; Dubois, Yann; Li, Xuechen; Guestrin, Carlos; Liang, Percy; Hashimoto, Tatsunori B. (13 March 2023). "Alpaca: A Strong, Replicable Instruction-Following Model". Stanford Center for Research on Foundation Models.
+ Wang, Yizhong; Kordi, Yeganeh; Mishra, Swaroop; Liu, Alisa; Smith, Noah A.; Khashabi, Daniel; Hajishirzi, Hannaneh (2022). "Self-Instruct: Aligning Language Models with Self-Generated Instructions". arXiv:2212.10560 [cs.CL].
+ "alpaca-lora". GitHub. Retrieved 5 April 2023.
